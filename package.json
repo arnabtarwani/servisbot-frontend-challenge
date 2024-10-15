@@ -4,7 +4,8 @@
   "description": "ServisBot frontend take home code challenge",
   "main": "index.js",
   "scripts": {
-    "start": "node generate.mjs"
+    "start": "node generate.mjs",
+    "backend": "pnpm --filter backend --"
   },
   "author": "",
   "license": "ISC",
