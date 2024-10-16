@@ -22,19 +22,19 @@ enum Status {
 }
 
 model bot {
-  id          String   @id @default(uuid())
+  id          String @id @default(uuid())
   name        String
   description String
   status      Status
-  created     DateTime
+  created     BigInt
 }
 
 model worker {
-  id          String   @id @default(uuid())
+  id          String @id @default(uuid())
   name        String
   description String
   bot         String
-  created     DateTime
+  created     BigInt
 }
 
 model log {
