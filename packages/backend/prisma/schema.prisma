@@ -9,6 +9,38 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// TODO: Add explanation of the schema
+
+enum Status {
+  DISABLED
+  ENABLED
+  PAUSED
+}
+
+model bot {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  status      Status
+  created     DateTime
+}
+
+model worker {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  bot         String
+  created     DateTime
+}
+
+model log {
+  id      String   @id @default(uuid())
+  message String
+  bot     String
+  worker  String
+  created DateTime
 }

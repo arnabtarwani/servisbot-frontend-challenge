@@ -2,15 +2,12 @@
 version: '3.1'
 
 services:
-  mongodb:
-    image: mongodb/mongodb-atlas-local
+  postgres:
+    image: postgres:16
     environment:
-      - MONGODB_INITDB_ROOT_USERNAME=user
-      - MONGODB_INITDB_ROOT_PASSWORD=pass
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: servisbot
     ports:
-      - 27018:27017    
-    volumes:
-      - data:/data/db
-
-volumes:
-  data:
+      - 5432:5432
+    restart: unless-stopped

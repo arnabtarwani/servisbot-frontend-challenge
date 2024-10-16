@@ -1,5 +1,7 @@
-import fastify, { FastifyInstance } from 'fastify'
+import fastify, { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { Server, IncomingMessage, ServerResponse } from 'http'
+import cors from "@fastify/cors"
+import helmet from "@fastify/helmet"
 
 const server: FastifyInstance<
     Server,
@@ -7,8 +9,18 @@ const server: FastifyInstance<
     ServerResponse
 > = fastify({ logger: true })
 
+server.register(cors, {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Authorization"],
+    credentials: true
+})
+
+server.register(helmet)
+
 server.get<{
-}>('/', (_request, reply) => {
+}>('/', (_request: FastifyRequest, reply: FastifyReply) => {
     reply.code(200).send({ pong: 'Welcome to ServisBot Task!' })
 })
 
