@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node generate.mjs",
-    "backend": "pnpm --filter backend --"
+    "backend": "pnpm --filter backend --",
+    "frontend": "pnpm --filter frontend --"
   },
   "author": "",
   "license": "ISC",

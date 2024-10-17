@@ -1,17 +1,6 @@
 -- CreateEnum
 BEGIN;
 
--- DO $$ BEGIN IF NOT EXISTS (
---     SELECT
---         1
---     FROM
---         pg_type
---     WHERE
---         typname = 'Status'
--- ) THEN CREATE TYPE "Status" AS ENUM ('DISABLED', 'ENABLED', 'PAUSED');
--- END IF;
--- END $$;
--- CreateTable
 CREATE TABLE IF NOT EXISTS "bot" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,

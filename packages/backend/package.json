@@ -13,7 +13,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "postinstall": "pnpm run db:migrate && pnpm run db:generate"
+    "postinstall": "pnpm run db:migrate && pnpm run db:generate && cd ../.. && make seed-db-docker || make seed-db"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.1",
