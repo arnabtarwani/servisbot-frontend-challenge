@@ -4,6 +4,7 @@
   "description": "ServisBot frontend take home code challenge",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently \"pnpm backend dev\" \"pnpm frontend dev\"",
     "start": "node generate.mjs",
     "backend": "pnpm --filter backend --",
     "frontend": "pnpm --filter frontend --"

@@ -22,11 +22,13 @@ import { useState } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  loading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  loading,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -34,12 +36,13 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
   const [state, setState] = useState({
     ...table.initialState,
     pagination: {
       ...table.initialState.pagination,
       pageIndex: 0,
-      pageSize: 15,
+      pageSize: 20,
     },
   });
 
@@ -50,14 +53,14 @@ export function DataTable<TData, TValue>({
   }));
 
   return (
-    <div className="w-full ">
-      <Table className="w-full border-gray-500">
+    <div className="w-full">
+      <Table className="w-full border-[1px] border-gray-200">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="border-[1px]">
+                  <TableHead key={header.id} className="border-y-[1px]">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -71,37 +74,54 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    tooltip-id={cell.id}
-                    className="border-[1px] text-gray-300 font-light truncate max-w-96 text-ellipsis overflow-x-hidden"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
+          {loading && (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                Loading...
               </TableCell>
             </TableRow>
           )}
+          {!loading && table.getRowModel().rows?.length
+            ? table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      tooltip-id={cell.id}
+                      className="px-4 border-b-[1px] text-xs text-gray-800 font-light truncate max-w-96 text-ellipsis overflow-x-hidden"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            : !loading &&
+              table.getRowModel().rows?.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
         </TableBody>
       </Table>
       <div className="flex items-center justify-between space-x-2 py-4">
         <div>
-          <span className="select-none">
-            Page {table.getState().pagination.pageIndex + 1}{" "}
-            <strong>of {table.getPageCount()}</strong>
+          <span className="select-none text-xs">
+            Page{" "}
+            {table.getPageCount() === 0
+              ? 0
+              : table.getState().pagination.pageIndex + 1}{" "}
+            <span>of {table.getPageCount()}</span>
           </span>
         </div>
         <div className="flex items-center space-x-2">
@@ -116,10 +136,10 @@ export function DataTable<TData, TValue>({
           <Button
             variant="outline"
             size="sm"
+            disabled={!table.getCanNextPage()}
             onClick={() => {
               table.nextPage();
             }}
-            disabled={!table.getCanNextPage()}
           >
             Next
           </Button>

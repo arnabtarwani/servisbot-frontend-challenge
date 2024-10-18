@@ -41,13 +41,15 @@ export const botColumns: ColumnDef<Bot>[] = [
       const navigate = useNavigate();
       const rowId = row.getValue("id");
       return (
-        <div
-          onClick={() => {
-            navigate(`/bots/${rowId}`);
-          }}
-          className="flex justify-center items-center hover:bg-gray-50 hover:text-gray-900"
-        >
-          <ArrowRight className="w-4 h-4" />
+        <div className="flex justify-center items-center w-auto">
+          <div
+            onClick={() => {
+              navigate(`/bots/${rowId}?type=log`);
+            }}
+            className="border border-gray-900 p-1 hover:bg-gray-800 hover:text-gray-50"
+          >
+            <ArrowRight className="w-4 h-4" />
+          </div>
         </div>
       );
     },
@@ -84,24 +86,6 @@ export const logColumns: ColumnDef<Log>[] = [
       return createdAt;
     },
   },
-  // {
-  //   id: "actions",
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     const navigate = useNavigate();
-  //     const rowId = row.getValue("id");
-  //     return (
-  //       <div
-  //         onClick={() => {
-  //           navigate(`/bots/${rowId}`);
-  //         }}
-  //         className="flex justify-center items-center hover:bg-gray-50 hover:text-gray-900"
-  //       >
-  //         <ArrowRight className="w-4 h-4" />
-  //       </div>
-  //     );
-  //   },
-  // },
 ];
 
 export const workerColumns: ColumnDef<Worker>[] = [
@@ -144,13 +128,15 @@ export const workerColumns: ColumnDef<Worker>[] = [
         (bot) => bot.name === row.getValue("bot")
       )?.id;
       return (
-        <div
-          onClick={() => {
-            navigate(`/bots/${botId}/${rowId}`);
-          }}
-          className="flex justify-center items-center hover:bg-gray-50 hover:text-gray-900"
-        >
-          <ArrowRight className="w-4 h-4" />
+        <div className="flex justify-center items-center w-auto">
+          <div
+            onClick={() => {
+              navigate(`/bots/${botId}/${rowId}`);
+            }}
+            className="border border-gray-900 p-1 hover:bg-gray-800 hover:text-gray-50"
+          >
+            <ArrowRight className="w-4 h-4" />
+          </div>
         </div>
       );
     },

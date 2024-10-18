@@ -4,12 +4,18 @@ import cors from "@fastify/cors"
 import helmet from "@fastify/helmet"
 import db from 'prisma'
 
+/**
+ * initialising FastifyInstance 
+ */
 const server: FastifyInstance<
     Server,
     IncomingMessage,
     ServerResponse
 > = fastify({ logger: true })
 
+/**
+ *  
+ */
 server.register(cors, {
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -135,7 +141,6 @@ server.get("/workers/:bot", async (request: FastifyRequest<{ Params: { bot: stri
 
 server.get("/logs/:bot", async (request: FastifyRequest<{ Params: { bot: string }, Querystring: { offset?: string, limit?: string } }>, reply: FastifyReply) => {
     const { bot } = request.params
-    const { offset, limit } = request.query
 
     if (!bot) {
         return reply.code(400).send({ message: "Bot name is required" })
@@ -145,8 +150,6 @@ server.get("/logs/:bot", async (request: FastifyRequest<{ Params: { bot: string 
         where: {
             bot: bot
         },
-        take: parseInt(limit as string) ? parseInt(limit as string) : 100,
-        skip: parseInt(offset as string) ? parseInt(offset as string) : 0,
         select: {
             id: true,
             worker: true,
