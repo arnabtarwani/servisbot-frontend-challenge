@@ -25,6 +25,9 @@ interface LogStore {
     setWorkerLogsOffset: (offset: number) => void;
 }
 
+/**
+ * a store to manage bots and workers
+ */
 export const useBotStore = create<BotStore, [["zustand/persist", unknown]]>(
     persist(
         (set) => ({
@@ -40,6 +43,9 @@ export const useBotStore = create<BotStore, [["zustand/persist", unknown]]>(
     )
 );
 
+/**
+ * a store to manage logs for bots and workers
+ */
 export const useLogStore = create<LogStore, [["zustand/persist", unknown]]>(
     persist(
         (set) => ({

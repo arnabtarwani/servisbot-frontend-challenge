@@ -14,7 +14,7 @@ const server: FastifyInstance<
 > = fastify({ logger: true })
 
 /**
- *  
+ * registering CORS and Helmet plugins
  */
 server.register(cors, {
     origin: "*",
@@ -26,11 +26,18 @@ server.register(cors, {
 
 server.register(helmet)
 
+/** 
+ * a random route to check if the server is running
+ */
 server.get<{
 }>('/', (_request: FastifyRequest, reply: FastifyReply) => {
     reply.code(200).send({ pong: 'Welcome to ServisBot Task!' })
 })
 
+/**
+ * a route to get all bots
+ * @returns {Array} bots
+ */
 server.get("/bots", async (_request: FastifyRequest, reply: FastifyReply) => {
     const bots = await db.bot.findMany({
         select: {
@@ -59,6 +66,11 @@ server.get("/bots", async (_request: FastifyRequest, reply: FastifyReply) => {
     reply.code(200).send(bots)
 })
 
+/**
+ * a route to get a specific bot
+ * @param {String} botId
+ * @returns {Object} bot
+ */
 server.get("/bots/:botId", async (request: FastifyRequest<{
     Params: {
         botId: string
@@ -70,7 +82,7 @@ server.get("/bots/:botId", async (request: FastifyRequest<{
         return reply.code(400).send({ message: "Bot Id is required" })
     }
 
-    const bot = await db.bot.findFirst({
+    const bot = await db.bot.findFirstOrThrow({
         where: {
             id: botId
         },
@@ -99,11 +111,14 @@ server.get("/bots/:botId", async (request: FastifyRequest<{
     reply.code(200).send(bot)
 })
 
+/**
+ * a route to get all workers for a specific bot
+ * @param {String} bot
+ * @returns {Array} workers
+ */
 server.get("/workers/:bot", async (request: FastifyRequest<{ Params: { bot: string } }>, reply: FastifyReply) => {
 
     const { bot } = request.params
-
-    console.log(bot)
 
     if (!bot) {
         return reply.code(400).send({ message: "Bot name is required" })
@@ -139,11 +154,16 @@ server.get("/workers/:bot", async (request: FastifyRequest<{ Params: { bot: stri
     reply.code(200).send(workers)
 })
 
+/**
+ * a route to get all logs for a specific bot
+ * @param {String} bot
+ * @returns {Array} logs
+ */
 server.get("/logs/:bot", async (request: FastifyRequest<{ Params: { bot: string }, Querystring: { offset?: string, limit?: string } }>, reply: FastifyReply) => {
     const { bot } = request.params
 
     if (!bot) {
-        return reply.code(400).send({ message: "Bot name is required" })
+        return reply.code(400).send({ message: "Bot Id is required" })
     }
 
     const logs = await db.log.findMany({
@@ -176,11 +196,17 @@ server.get("/logs/:bot", async (request: FastifyRequest<{ Params: { bot: string 
     reply.code(200).send(logs)
 })
 
+/**
+ * a route to get all logs for a specific bot and worker
+ * @param {String} bot
+ * @param {String} worker
+ * @returns {Array} logs
+ */
 server.get("/logs/:bot/:worker", async (request: FastifyRequest<{ Params: { bot: string, worker: string } }>, reply: FastifyReply) => {
     const { bot, worker } = request.params
 
     if (!bot || !worker) {
-        return reply.code(400).send({ message: "Bot and Worker names are required" })
+        return reply.code(400).send({ message: "Bot and Worker Ids are required" })
     }
 
     const logs = await db.log.findMany({

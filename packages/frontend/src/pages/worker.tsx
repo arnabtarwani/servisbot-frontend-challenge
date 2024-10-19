@@ -13,7 +13,11 @@ const Worker = () => {
 
   const worker = workers.find((worker) => worker.id === workerId);
 
-  const fetchWorkerLogs = async () => {
+  /**
+   * This function fetches worker logs
+   * @returns {Array} worker logs
+   */
+  const fetchWorkerLogs = async (): Promise<Array<Worker>> => {
     const res = await api(`logs/${botId}/${workerId}`, "GET");
     setWorkerLogs(res);
     setLoading(false);

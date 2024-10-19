@@ -3,12 +3,17 @@ import { HomePage } from "../components/home/page";
 import { DefaultLayout } from "../components/layout/default";
 import { api } from "../utils";
 import { useBotStore } from "../store/globalStore";
+import { Bot } from "../utils/types";
 
 const Home = () => {
   const { bots, setBots } = useBotStore();
   const [loading, setLoading] = useState(false);
 
-  const fetchBots = async () => {
+  /**
+   * This function fetches all bots
+   * @returns {Array} bots
+   */
+  const fetchBots = async (): Promise<Array<Bot>> => {
     const res = await api("bots", "GET");
     setBots(res);
     setLoading(false);

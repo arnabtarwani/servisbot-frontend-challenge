@@ -5,6 +5,7 @@ import { api, cn } from "../utils";
 import { useMemo, useState } from "react";
 import { BotsPage } from "../components/bot/page";
 import { Button } from "../components/ui/button";
+import { Log } from "../utils/types";
 
 const Bot = () => {
   const { id } = useParams();
@@ -13,11 +14,14 @@ const Bot = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { botLogs, setBotLogs, botLogsLimit, botLogsOffset } = useLogStore();
+  const { botLogs, setBotLogs } = useLogStore();
   const bot = bots.find((bot) => bot.id === id);
 
-  const fetchBotLogs = async (limit?: number, offset?: number) => {
-    const res = await api(`logs/${id}?limit=${limit}&offset=${offset}`, "GET");
+  /**
+   * @returns {Array} bot logs
+   */
+  const fetchBotLogs = async (): Promise<Array<Log>> => {
+    const res = await api(`logs/${id}`, "GET");
     if (res.length > 100) {
       setBotLogs({ ...botLogs, ...res });
     }
@@ -25,7 +29,10 @@ const Bot = () => {
     return res;
   };
 
-  const fetchBotWorkers = async () => {
+  /**
+   * @returns {Array} bot workers
+   */
+  const fetchBotWorkers = async (): Promise<Array<Worker>> => {
     const res = await api(`workers/${bot?.name}`, "GET");
     setWorkers(res);
     setLoading(false);
@@ -40,9 +47,9 @@ const Bot = () => {
     }
 
     setLoading(true);
-    fetchBotLogs(botLogsLimit, botLogsOffset);
+    fetchBotLogs();
     fetchBotWorkers();
-  }, [botLogsLimit, botLogsOffset, location.search]);
+  }, [location.search]);
 
   return (
     <DefaultLayout
